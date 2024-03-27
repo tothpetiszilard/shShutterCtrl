@@ -68,7 +68,7 @@ void MotorCtrl_Init(void)
 		.intr_type = GPIO_INTR_DISABLE
 	};
 	gpio_config(&motorDownCfg);
-	gpio_set_level(MOTORCTRL_PIN_DOWN, MOTORCTRL_OFF); // Turns off SSR for mains
+	gpio_set_level(MOTORCTRL_PIN_ON, MOTORCTRL_OFF); // Turns off SSR for mains
 #endif	
 	MotorCtrl_status_en = MOTORCTRL_IDLE;
 
