@@ -19,9 +19,9 @@
 
 #define TYPE					A
 #define SUBTYPE					W
-#define VER_MAJOR				1
-#define VER_MINOR				6
-#define VER_PATCH				6
+#define VER_MAJOR				2
+#define VER_MINOR				0
+#define VER_PATCH				0
 
 #define DEVTYPE					('A')
 #define DEVSUBTYPE				('W')

@@ -58,17 +58,7 @@ void MotorCtrl_Init(void)
 		.intr_type = GPIO_INTR_DISABLE
 	};
 	gpio_config(&motorEnCfg);
-	gpio_set_level(MOTORCTRL_PIN_EN, MOTORCTRL_OFF); // Disable mains with relay 
-	gpio_config_t motorUpCfg =
-	{
-		.pin_bit_mask = GPIO_Pin_14,
-		.mode = GPIO_MODE_OUTPUT,
-		.pull_up_en = GPIO_PULLUP_DISABLE,
-		.pull_down_en = GPIO_PULLDOWN_DISABLE,
-		.intr_type = GPIO_INTR_DISABLE
-	};
-	gpio_config(&motorUpCfg);
-	gpio_set_level(MOTORCTRL_PIN_UP, MOTORCTRL_OFF); // Turn off SSR for upwards dir
+	gpio_set_level(MOTORCTRL_PIN_nUP_DOWN, MOTORCTRL_OFF); // Switches to UPwards
 		gpio_config_t motorDownCfg =
 	{
 		.pin_bit_mask = GPIO_Pin_5,
@@ -78,7 +68,7 @@ void MotorCtrl_Init(void)
 		.intr_type = GPIO_INTR_DISABLE
 	};
 	gpio_config(&motorDownCfg);
-	gpio_set_level(MOTORCTRL_PIN_DOWN, MOTORCTRL_OFF); // Turn off SSR for downwards dir
+	gpio_set_level(MOTORCTRL_PIN_DOWN, MOTORCTRL_OFF); // Turns off SSR for mains
 #endif	
 	MotorCtrl_status_en = MOTORCTRL_IDLE;
 
@@ -108,10 +98,7 @@ void MotorCtrl_Up(void)
 {
 	if ((MOTORCTRL_IDLE == MotorCtrl_status_en) && (MOTORCTRL_MOTORPOS_UP < motorPosition_u16))
 	{
-		digitalWrite(MOTORCTRL_PIN_EN, MOTORCTRL_ON); // Enable mains with relay 
-		vTaskDelay(100 / portTICK_PERIOD_MS);
-		digitalWrite(MOTORCTRL_PIN_DOWN,MOTORCTRL_OFF);
-		digitalWrite(MOTORCTRL_PIN_UP,MOTORCTRL_ON);
+		digitalWrite(MOTORCTRL_PIN_ON,MOTORCTRL_ON); // Enable mains with SSR
 		MotorCtrl_status_en = MOTORCTRL_UP;
 		lastChanged = millis();
 	}
@@ -199,10 +186,9 @@ void MotorCtrl_Stop(void)
 #endif
 	uint32_t currTime = millis();
 	
-	digitalWrite(MOTORCTRL_PIN_DOWN,MOTORCTRL_OFF);
-	digitalWrite(MOTORCTRL_PIN_UP,MOTORCTRL_OFF);
+	digitalWrite(MOTORCTRL_PIN_ON,MOTORCTRL_OFF); // Turn off mains voltage
 	vTaskDelay(100 / portTICK_PERIOD_MS);
-	digitalWrite(MOTORCTRL_PIN_EN, MOTORCTRL_OFF); // Disable mains with relay 
+	digitalWrite(MOTORCTRL_PIN_nUP_DOWN, MOTORCTRL_OFF); // Set back relays position to UP 
 
 	if ((MOTORCTRL_UP == MotorCtrl_status_en) && ((lastChanged + motorPosition_u16 + motorUpTime_u16) <= currTime))
 	{
@@ -276,10 +262,9 @@ void MotorCtrl_Down(void)
 {
 	if ((MOTORCTRL_IDLE == MotorCtrl_status_en) && (MOTORCTRL_MOTORPOS_DOWN > motorPosition_u16))
 	{
-		digitalWrite(MOTORCTRL_PIN_EN, MOTORCTRL_ON); // Enable mains with relay 
+		digitalWrite(MOTORCTRL_PIN_nUP_DOWN, MOTORCTRL_ON); // Switch to the DOWN coil with relay 
 		vTaskDelay(100 / portTICK_PERIOD_MS);
-		digitalWrite(MOTORCTRL_PIN_UP,MOTORCTRL_OFF);
-		digitalWrite(MOTORCTRL_PIN_DOWN,MOTORCTRL_ON);
+		digitalWrite(MOTORCTRL_PIN_ON,MOTORCTRL_ON); // Turn ON mains voltage via SSR
 		MotorCtrl_status_en = MOTORCTRL_DOWN;
 		lastChanged = millis();
 	}
@@ -312,10 +297,9 @@ void MotorCtrl_Close(void)
 {
 	if ((MOTORCTRL_IDLE == MotorCtrl_status_en) && (MOTORCTRL_MOTORPOS_CLOSE > motorPosition_u16))
 	{
-		digitalWrite(MOTORCTRL_PIN_EN, MOTORCTRL_ON); // Enable mains with relay 
+		digitalWrite(MOTORCTRL_PIN_nUP_DOWN, MOTORCTRL_ON); // Switch to the DOWN coil with relay 
 		vTaskDelay(100 / portTICK_PERIOD_MS);
-		digitalWrite(MOTORCTRL_PIN_UP,MOTORCTRL_OFF);
-		digitalWrite(MOTORCTRL_PIN_DOWN,MOTORCTRL_ON);
+		digitalWrite(MOTORCTRL_PIN_ON,MOTORCTRL_ON); // Turns mains voltage ON
 		MotorCtrl_status_en = MOTORCTRL_CLOSE;
 		lastChanged = millis();
 	}
