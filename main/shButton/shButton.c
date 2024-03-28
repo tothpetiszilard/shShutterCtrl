@@ -111,13 +111,9 @@ void ShButton_Cyclic(void)
 			{
 				MotorCtrl_Close();
 			}
-			else if (MOTORCTRL_DOWN != shutterState)
+			else
 			{
 				MotorCtrl_Down();
-			}
-			else 
-			{
-				// Nothing to do
 			}
 #if (10 < SH_SW_PATCH_VER)
 	Det_PrintLog(DET_MODULEID_SHBUTTON, "Motor DOWN");

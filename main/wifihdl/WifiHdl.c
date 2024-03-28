@@ -54,7 +54,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
     }
     else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED)
     {
-        if (s_retry_num < 10)
+        if (s_retry_num < 100)
         {
             esp_wifi_connect();
             s_retry_num++;
@@ -140,15 +140,17 @@ void wifi_init_sta(void)
     {
         ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
         		wifi_config.sta.ssid, wifi_config.sta.password);
+        esp_restart();
     }
     else
     {
         ESP_LOGE(TAG, "UNEXPECTED EVENT");
     }
-
+/*
     ESP_ERROR_CHECK(esp_event_handler_unregister(IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler));
     ESP_ERROR_CHECK(esp_event_handler_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler));
     vEventGroupDelete(s_wifi_event_group);
+*/
 }
 
 
