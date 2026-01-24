@@ -24,8 +24,8 @@
 #define digitalWrite(pin,val)	(gpio_set_level(pin,val))
 #define millis()                (xTaskGetTickCount())
 
-#define MOTORCTRL_PIN_ON            (GPIO_NUM_5) // Turns on SSR which provides mains voltage to the relay
-#define MOTORCTRL_PIN_nUP_DOWN      (GPIO_NUM_4) // If turned on, relay switches to the DOWN direction
+#define MOTORCTRL_PIN_ON            (GPIO_NUM_4) // Turns on SSR which provides mains voltage to the relay
+#define MOTORCTRL_PIN_nUP_DOWN      (GPIO_NUM_5) // If turned on, relay switches to the DOWN direction
 
 #define MOTORCTRL_ON          (1u)
 #define MOTORCTRL_OFF         (0u)

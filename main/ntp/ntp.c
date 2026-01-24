@@ -41,7 +41,7 @@ void NTP_Init(void)
 	struct tm timeinfo = { 0 };
 	int retry = 0;
 	const int retry_count = 10;
-	while (timeinfo.tm_year < (2016 - 1900) && ++retry < retry_count)
+	while (timeinfo.tm_year < (2026 - 1900) && ++retry < retry_count)
 	{
 		//ESP_LOGI("NTP", "Waiting for system time to be set... (%d/%d)", retry, retry_count);
 		vTaskDelay(1000 / portTICK_PERIOD_MS);

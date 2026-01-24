@@ -10,6 +10,7 @@
 
 #include "shCfg.h"
 #include "esp_littlefs.h"
+#include "esp_system.h"
 
 typedef struct
 {

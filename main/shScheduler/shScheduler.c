@@ -66,211 +66,213 @@ void ShScheduler_Cyclic(void)
 	while(1u)
 	#else
 	static uint8_t cycleCnt_u8 = 0u;
-	if (SHSCHEDULER_CYCLECNT <= cycleCnt_u8)
+    if (SHSCHEDULER_CYCLECNT <= cycleCnt_u8)
+    #endif
+    {
+        if (2025 < SHSCHEDULER_YEAR())
+        {
+			if (E_OK == SHSCHEDULER_READCFG((uint8_t*)schTable_aau8))
+			{
+				/* Read successful */
+				currState_en = SHSCHEDULER_GETSTATE();
+	#if (10 < SH_SW_PATCH_VER)
+				switch(currState_en)
+				{
+					case SUNSETD_MODE:
+						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Sunset + Daily mode");
+						break;
+					case DAILY_MODE:
+						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Daily mode");
+						break;
+					case SUNSETW_MODE:
+						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Sunset + Weekly mode");
+						break;
+					case WEEKLY_MODE:
+						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Weekly mode");
+						break;
+					default:
+						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Invalid mode");
+						break;
+				}
+				Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Schedule time, cfg OK");
 	#endif
-	{
-		if (E_OK == SHSCHEDULER_READCFG((uint8_t*)schTable_aau8))
-		{
-			/* Read successful */
-			currState_en = SHSCHEDULER_GETSTATE();
-#if (10 < SH_SW_PATCH_VER)
-			switch(currState_en)
-			{
-				case SUNSETD_MODE:
-					Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Sunset + Daily mode");
-					break;
-				case DAILY_MODE:
-					Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Daily mode");
-					break;
-				case SUNSETW_MODE:
-					Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Sunset + Weekly mode");
-					break;
-				case WEEKLY_MODE:
-					Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Weekly mode");
-					break;
-				default:
-					Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Invalid mode");
-					break;
-			}
-			Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Schedule time, cfg OK");
-#endif
-			if ((WEEKLY_MODE == currState_en) || (SUNSETW_MODE == currState_en))
-			{
-				currentDay = SHSCHEDULER_WEEKDAY();
-				currentHour_u8 = SHSCHEDULER_HOUR();
-				if (SUNSETW_MODE == currState_en)
+				if ((WEEKLY_MODE == currState_en) || (SUNSETW_MODE == currState_en))
 				{
-					currentSun_en = DayTime_Get();
-#if (10 < SH_SW_PATCH_VER)
-					switch (currentSun_en)
+					currentDay = SHSCHEDULER_WEEKDAY();
+					currentHour_u8 = SHSCHEDULER_HOUR();
+					if (SUNSETW_MODE == currState_en)
 					{
-					case DAYTIME_MOONLIGHT:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: Moonlight");
-					break;
-					case DAYTIME_SUNLIGHT:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: Sunlight");
-					break;
-					case DAYTIME_NOT_AVAILABLE:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: N/A");
-					break;
-					default:
-					break;
-					}
-					switch (lastSun_en)
-					{
-					case DAYTIME_MOONLIGHT:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: Moonlight");
-					break;
-					case DAYTIME_SUNLIGHT:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: Sunlight");
-					break;
-					case DAYTIME_NOT_AVAILABLE:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: N/A");
-					break;
-					default:
-					break;
-					}
-#endif
-					if (currentSun_en != lastSun_en)
-					{
-						if (currentSun_en == DAYTIME_MOONLIGHT)
+						currentSun_en = DayTime_Get();
+	#if (10 < SH_SW_PATCH_VER)
+						switch (currentSun_en)
 						{
-#if (10 < SH_SW_PATCH_VER)
-							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Daylight->Moonlight");
-#endif
-							command_en = SHSCH_DOWN;
-							ShScheduler_DoCmd(command_en);
+						case DAYTIME_MOONLIGHT:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: Moonlight");
+						break;
+						case DAYTIME_SUNLIGHT:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: Sunlight");
+						break;
+						case DAYTIME_NOT_AVAILABLE:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: N/A");
+						break;
+						default:
+						break;
 						}
-#if (10 < SH_SW_PATCH_VER)
-						else if (currentSun_en == DAYTIME_SUNLIGHT)
+						switch (lastSun_en)
 						{
-							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Moonlight->Daylight");
+						case DAYTIME_MOONLIGHT:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: Moonlight");
+						break;
+						case DAYTIME_SUNLIGHT:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: Sunlight");
+						break;
+						case DAYTIME_NOT_AVAILABLE:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: N/A");
+						break;
+						default:
+						break;
 						}
-						else
+	#endif
+						if (currentSun_en != lastSun_en)
 						{
-							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Daytime N/A");
+							if (currentSun_en == DAYTIME_MOONLIGHT)
+							{
+	#if (10 < SH_SW_PATCH_VER)
+								Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Daylight->Moonlight");
+	#endif
+								command_en = SHSCH_DOWN;
+								ShScheduler_DoCmd(command_en);
+							}
+	#if (10 < SH_SW_PATCH_VER)
+							else if (currentSun_en == DAYTIME_SUNLIGHT)
+							{
+								Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Moonlight->Daylight");
+							}
+							else
+							{
+								Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Daytime N/A");
+							}
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Weekly mode - Sun changed");
+	#endif
+							lastSun_en = currentSun_en;
 						}
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Weekly mode - Sun changed");
-#endif
-						lastSun_en = currentSun_en;
 					}
-				}
 
-				if (currentHour_u8 != lastHour_u8)
-				{
-#if (10 < SH_SW_PATCH_VER)
-					Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Weekly mode - Hour changed");
-#endif
-					command_en = getTableData_u8(currentDay, currentHour_u8);
-					ShScheduler_DoCmd(command_en);
-					lastHour_u8 = currentHour_u8;
-				}
-			}
-			else if ((DAILY_MODE == currState_en) || (SUNSETD_MODE == currState_en))
-			{
-				currentDay = dowInvalid;
-				currentHour_u8 = SHSCHEDULER_HOUR();
-				if (SUNSETD_MODE == currState_en)
-				{
-					currentSun_en = DayTime_Get();
-#if (10 < SH_SW_PATCH_VER)
-					switch (currentSun_en)
+					if (currentHour_u8 != lastHour_u8)
 					{
-					case DAYTIME_MOONLIGHT:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: Moonlight");
-					break;
-					case DAYTIME_SUNLIGHT:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: Sunlight");
-					break;
-					case DAYTIME_NOT_AVAILABLE:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: N/A");
-					break;
-					default:
-					break;
-					}
-					switch (lastSun_en)
-					{
-					case DAYTIME_MOONLIGHT:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: Moonlight");
-					break;
-					case DAYTIME_SUNLIGHT:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: Sunlight");
-					break;
-					case DAYTIME_NOT_AVAILABLE:
-						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: N/A");
-					break;
-					default:
-					break;
-					}
-#endif
-					if (currentSun_en != lastSun_en)
-					{
-						if (currentSun_en == DAYTIME_MOONLIGHT)
-						{
-#if (10 < SH_SW_PATCH_VER)
-#endif
-							command_en = SHSCH_DOWN;
-							ShScheduler_DoCmd(command_en);
-						}
-#if (10 < SH_SW_PATCH_VER)
-						else if (currentSun_en == DAYTIME_SUNLIGHT)
-						{
-						}
-						else
-						{
-						}
-#endif
-						lastSun_en = currentSun_en;
+	#if (10 < SH_SW_PATCH_VER)
+						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Weekly mode - Hour changed");
+	#endif
+						command_en = getTableData_u8(currentDay, currentHour_u8);
+						ShScheduler_DoCmd(command_en);
+						lastHour_u8 = currentHour_u8;
 					}
 				}
-				if (currentHour_u8 != lastHour_u8)
+				else if ((DAILY_MODE == currState_en) || (SUNSETD_MODE == currState_en))
 				{
-#if (10 < SH_SW_PATCH_VER)
-					Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Daily mode - Hour changed");
-#endif
-					command_en = getTableData_u8(currentDay, currentHour_u8);
-					ShScheduler_DoCmd(command_en);
-					lastHour_u8 = currentHour_u8;
+					currentDay = dowInvalid;
+					currentHour_u8 = SHSCHEDULER_HOUR();
+					if (SUNSETD_MODE == currState_en)
+					{
+						currentSun_en = DayTime_Get();
+	#if (10 < SH_SW_PATCH_VER)
+						switch (currentSun_en)
+						{
+						case DAYTIME_MOONLIGHT:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: Moonlight");
+						break;
+						case DAYTIME_SUNLIGHT:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: Sunlight");
+						break;
+						case DAYTIME_NOT_AVAILABLE:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Current: N/A");
+						break;
+						default:
+						break;
+						}
+						switch (lastSun_en)
+						{
+						case DAYTIME_MOONLIGHT:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: Moonlight");
+						break;
+						case DAYTIME_SUNLIGHT:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: Sunlight");
+						break;
+						case DAYTIME_NOT_AVAILABLE:
+							Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Last: N/A");
+						break;
+						default:
+						break;
+						}
+	#endif
+						if (currentSun_en != lastSun_en)
+						{
+							if (currentSun_en == DAYTIME_MOONLIGHT)
+							{
+	#if (10 < SH_SW_PATCH_VER)
+	#endif
+								command_en = SHSCH_DOWN;
+								ShScheduler_DoCmd(command_en);
+							}
+	#if (10 < SH_SW_PATCH_VER)
+							else if (currentSun_en == DAYTIME_SUNLIGHT)
+							{
+							}
+							else
+							{
+							}
+	#endif
+							lastSun_en = currentSun_en;
+						}
+					}
+					if (currentHour_u8 != lastHour_u8)
+					{
+	#if (10 < SH_SW_PATCH_VER)
+						Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Daily mode - Hour changed");
+	#endif
+						command_en = getTableData_u8(currentDay, currentHour_u8);
+						ShScheduler_DoCmd(command_en);
+						lastHour_u8 = currentHour_u8;
+					}
+				}
+				else
+				{
+					/* Manual mode */
+	#if (10 < SH_SW_PATCH_VER)
+					Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Manual mode - No action");
+	#endif
 				}
 			}
 			else
 			{
-				/* Manual mode */
-#if (10 < SH_SW_PATCH_VER)
-				Det_PrintLog(DET_MODULEID_SHSCHEDULER, "Manual mode - No action");
-#endif
+	#if (10 < SH_SW_PATCH_VER)
+				Det_ReportError(DET_MODULEID_SHSCHEDULER, "Sch table read failed");
+	#endif
+				/* Schedule table read error */
+				if (MANUAL_MODE != currState_en)
+				{
+					/* manual mode is not active, no change */
+					currentDay = dowInvalid;
+					currentHour_u8 = SHSCHEDULER_HOUR();
+					command_en = getTableData_u8(currentDay, currentHour_u8);
+					if (currentHour_u8 != lastHour_u8)
+					{
+						ShScheduler_DoCmd(command_en);
+						lastHour_u8 = currentHour_u8;
+					}
+				}
 			}
+			#ifndef ARDUINO
+			vTaskDelay(SHSCHEDULER_CYCLECNT / portTICK_PERIOD_MS);
+			#else
+			cycleCnt_u8 = 0u;
 		}
 		else
 		{
-#if (10 < SH_SW_PATCH_VER)
-			Det_ReportError(DET_MODULEID_SHSCHEDULER, "Sch table read failed");
-#endif
-			/* Schedule table read error */
-			if (MANUAL_MODE != currState_en)
-			{
-				/* manual mode is not active, no change */
-				currentDay = dowInvalid;
-				currentHour_u8 = SHSCHEDULER_HOUR();
-				command_en = getTableData_u8(currentDay, currentHour_u8);
-				if (currentHour_u8 != lastHour_u8)
-				{
-					ShScheduler_DoCmd(command_en);
-					lastHour_u8 = currentHour_u8;
-				}
-			}
+			cycleCnt_u8++;
+			#endif
 		}
-		#ifndef ARDUINO
-		vTaskDelay(SHSCHEDULER_CYCLECNT / portTICK_PERIOD_MS);
-		#else
-		cycleCnt_u8 = 0u;
-	}
-	else
-	{
-		cycleCnt_u8++;
-		#endif
-	}
-
+    }
 }
 
 static inline void ShScheduler_DoCmd(shSchedulerCmd_ten cmd_en)

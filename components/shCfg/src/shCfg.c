@@ -28,6 +28,7 @@ StdReturnType ShCfg_Init(void)
 		devID[2] = (uint8_t)(254);
 		devID[3] = (uint8_t)(254);
 		ShCfg_Write(SHCFG_IDENTDATA_CH, devID);*/
+		esp_restart();
 		retVal = E_OK;
 	}
 	else
@@ -38,14 +39,15 @@ StdReturnType ShCfg_Init(void)
 			devID[0] = (uint8_t)('A');
 			devID[1] = (uint8_t)('W');
 			devID[2] = (uint8_t)(0);
-			devID[3] = (uint8_t)(24);
+			devID[3] = (uint8_t)(30);
 			ShCfg_Write(SHCFG_IDENTDATA_CH, devID);
-			uint8_t ssid[] = "shNetwork\0";
-			uint8_t pwd[] = "d0ntH4ck1t\0";
+			uint8_t ssid[] = "TheCityOfLight_24\0";
+			uint8_t pwd[] = "mexikomabeka\0";
 			if (E_OK == ShCfg_Write(0u,ssid))
 			{
 				retVal = ShCfg_Write(1u,pwd);
 			}
+			esp_restart();
 		}
 	}
 	return retVal;

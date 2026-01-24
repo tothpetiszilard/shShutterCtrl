@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../ESP8266_RTOS_SDK"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"freertos.h": "c"
+		}
+	}
+}

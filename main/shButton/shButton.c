@@ -23,16 +23,16 @@
 #define millis()                (xTaskGetTickCount())
 #define digitalRead(pin)	    (gpio_get_level(pin))
 
-#define SHBUTTON_PIN_UP      (GPIO_NUM_13)
-#define SHBUTTON_PIN_DOWN    (GPIO_NUM_3)
+#define SHBUTTON_PIN_UP      (GPIO_NUM_12)
+#define SHBUTTON_PIN_DOWN    (GPIO_NUM_13)
 
 #define SHBUTTON_PRESSED      (0u)
 #define SHBUTTON_RELEASED     (1u)
 
 #else
 
-#define SHBUTTON_PIN_UP      (13u)
-#define SHBUTTON_PIN_DOWN    (3u)
+#define SHBUTTON_PIN_UP      (12u)
+#define SHBUTTON_PIN_DOWN    (13u)
 #define SHBUTTON_PRESSED      (0u)
 #define SHBUTTON_RELEASED     (1u)
 
@@ -223,7 +223,7 @@ void ShButton_Init(void)
 	#if (SHBUTTON_RELEASED == 1) // PULLUP
 	gpio_config_t motorUpCfg =
 	{
-		.pin_bit_mask = GPIO_Pin_13,
+		.pin_bit_mask = GPIO_Pin_12,
 		.mode = GPIO_MODE_INPUT,
 		.pull_up_en = GPIO_PULLUP_ENABLE,
 		.pull_down_en = GPIO_PULLDOWN_DISABLE,
@@ -231,7 +231,7 @@ void ShButton_Init(void)
 	};
 		gpio_config_t motorDownCfg =
 	{
-		.pin_bit_mask = GPIO_Pin_3,
+		.pin_bit_mask = GPIO_Pin_13,
 		.mode = GPIO_MODE_INPUT,
 		.pull_up_en = GPIO_PULLUP_ENABLE,
 		.pull_down_en = GPIO_PULLDOWN_DISABLE,
@@ -240,7 +240,7 @@ void ShButton_Init(void)
 	#else // PULLDOWN
 		gpio_config_t motorUpCfg =
 	{
-		.pin_bit_mask = GPIO_Pin_13,
+		.pin_bit_mask = GPIO_Pin_12,
 		.mode = GPIO_MODE_INPUT,
 		.pull_up_en = GPIO_PULLUP_DISABLE,
 		.pull_down_en = GPIO_PULLDOWN_ENABLE,
@@ -248,7 +248,7 @@ void ShButton_Init(void)
 	};
 		gpio_config_t motorDownCfg =
 	{
-		.pin_bit_mask = GPIO_Pin_3,
+		.pin_bit_mask = GPIO_Pin_13,
 		.mode = GPIO_MODE_INPUT,
 		.pull_up_en = GPIO_PULLUP_DISABLE,
 		.pull_down_en = GPIO_PULLDOWN_ENABLE,

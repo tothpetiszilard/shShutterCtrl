@@ -16,6 +16,7 @@
 #include "../DayTime/DayTime.h"
 
 #define SHSCHEDULER_WEEKDAY()					((timeDayOfWeek_t)weekday())
+#define SHSCHEDULER_YEAR()						(year())
 #define SHSCHEDULER_HOUR()						(hour())
 /* 30 secs * 20 = 10 mins*/
 #define SHSCHEDULER_CYCLECNT					((uint8_t)240u) /* 4 mins delay between adjustments */
@@ -30,6 +31,7 @@
 #include "freertos/task.h"
 
 #define SHSCHEDULER_WEEKDAY()					((timeDayOfWeek_t)weekday(0))
+#define SHSCHEDULER_YEAR()						(year(0))
 #define SHSCHEDULER_HOUR()						(hour(0))
 
 #define SHSCHEDULER_CYCLECNT					(60000u) /* 1 min (in ms) delay between adjustments */

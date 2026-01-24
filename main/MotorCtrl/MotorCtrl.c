@@ -58,7 +58,6 @@ void MotorCtrl_Init(void)
 		.intr_type = GPIO_INTR_DISABLE
 	};
 	gpio_config(&motorEnCfg);
-	gpio_set_level(MOTORCTRL_PIN_nUP_DOWN, MOTORCTRL_OFF); // Switches to UPwards
 		gpio_config_t motorDownCfg =
 	{
 		.pin_bit_mask = GPIO_Pin_5,
@@ -68,6 +67,7 @@ void MotorCtrl_Init(void)
 		.intr_type = GPIO_INTR_DISABLE
 	};
 	gpio_config(&motorDownCfg);
+	gpio_set_level(MOTORCTRL_PIN_nUP_DOWN, MOTORCTRL_OFF); // Switches to UPwards
 	gpio_set_level(MOTORCTRL_PIN_ON, MOTORCTRL_OFF); // Turns off SSR for mains
 #endif	
 	MotorCtrl_status_en = MOTORCTRL_IDLE;
