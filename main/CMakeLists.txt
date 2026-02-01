@@ -9,7 +9,7 @@ list(APPEND SOURCES shScheduler/shScheduler.c)
 list(APPEND SOURCES shStateMachine/shStateMachine.c)
 list(APPEND SOURCES sunMoon/sunMoon.c)
 list(APPEND SOURCES update/update.c)
-list(APPEND SOURCES wifihdl/WifiHdl.c)
+list(APPEND SOURCES wifiHdl/WifiHdl.c)
 list(APPEND SOURCES main.c)
 
 idf_component_register(SRCS ${SOURCES}

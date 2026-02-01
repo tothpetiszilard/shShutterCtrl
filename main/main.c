@@ -28,6 +28,7 @@ void app_main()
     ShCfg_Init();
 
     MotorCtrl_Init();
+	esp_mac_init();
 
     wifi_init_sta();
 

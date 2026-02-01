@@ -17,6 +17,12 @@
 #include "shCfg.h"
 #include "esp_log.h"
 
+volatile uint8_t ntp_ready = 0;
+
+uint8_t NTP_IsNtpReady(void)
+{
+	return ntp_ready;
+}
 
 void NTP_Init(void)
 {
@@ -51,11 +57,19 @@ void NTP_Init(void)
 
 	setenv("TZ", timezone_ach, 1);
 	tzset();
+	ntp_ready = 1u;
 }
 
 time_t now(void)
 {
-	return time(NULL);
+	if (ntp_ready)
+	{
+		return time(NULL);
+	}
+	else
+	{
+	    return 0;
+	}
 }
 
 timeDayOfWeek_t weekday(time_t t)
@@ -65,7 +79,7 @@ timeDayOfWeek_t weekday(time_t t)
 	time_t currTime;
 	if (0 == t)
 	{
-		currTime = time(NULL);
+		currTime = now();
 	}
 	else
 	{
@@ -83,7 +97,7 @@ uint8_t hour(time_t t)
 	time_t currTime;
 	if (0 == t)
 	{
-		currTime = time(NULL);
+		currTime = now();
 	}
 	else
 	{
@@ -100,7 +114,7 @@ uint8_t minute(time_t t)
 	time_t currTime;
 	if (0 == t)
 	{
-		currTime = time(NULL);
+		currTime = now();
 	}
 	else
 	{
@@ -117,7 +131,7 @@ uint8_t second(time_t t)
 	time_t currTime;
 	if (0 == t)
 	{
-		currTime = time(NULL);
+		currTime = now();
 	}
 	else
 	{
@@ -135,7 +149,7 @@ uint16_t year(time_t t)
 	time_t currTime;
 	if (0 == t)
 	{
-		currTime = time(NULL);
+		currTime = now();
 	}
 	else
 	{
@@ -145,6 +159,7 @@ uint16_t year(time_t t)
 	retVal = 1900 + (tElements).tm_year; //years since 1900
 	return retVal;
 }
+
 uint8_t month(time_t t)
 {
 	uint8_t retVal = 0;
@@ -152,7 +167,7 @@ uint8_t month(time_t t)
 	time_t currTime;
 	if (0 == t)
 	{
-		currTime = time(NULL);
+		currTime = now();
 	}
 	else
 	{
@@ -169,7 +184,7 @@ uint8_t day(time_t t)
 	time_t currTime;
 	if (0 == t)
 	{
-		currTime = time(NULL);
+		currTime = now();
 	}
 	else
 	{

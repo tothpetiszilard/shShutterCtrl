@@ -34,6 +34,8 @@ uint8_t month(time_t t);
 uint8_t day(time_t t);
 timeDayOfWeek_t weekday(time_t t);
 
+uint8_t NTP_IsNtpReady(void);
+
 time_t now(void);
 
 #endif /* NTP_H_ */

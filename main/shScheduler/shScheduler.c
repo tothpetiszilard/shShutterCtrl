@@ -69,7 +69,7 @@ void ShScheduler_Cyclic(void)
     if (SHSCHEDULER_CYCLECNT <= cycleCnt_u8)
     #endif
     {
-        if (2025 < SHSCHEDULER_YEAR())
+        if (0 != NTP_IsNtpReady())
         {
 			if (E_OK == SHSCHEDULER_READCFG((uint8_t*)schTable_aau8))
 			{
