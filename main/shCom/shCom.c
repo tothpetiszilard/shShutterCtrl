@@ -75,6 +75,9 @@ static void HandleReadWindow(IPAddress * srvIp);
 static void HandleWriteCfg(IPAddress * srvIp, uint8_t chId_u8, uint8_t * cfg_pu8, uint16_t size_u16);
 static void HandleWriteState(IPAddress * srvIp, uint8_t newState_u8);
 
+static void HandleReadTime(IPAddress * srvIp);
+static void HandleWriteTime(uint32_t * newTimePtr);
+
 void ShCom_Init(void)
 {
 #ifdef ARDUINO
@@ -263,6 +266,17 @@ static void HandleReceivedPacket(IPAddress serverIp, uint8_t * buffer_pu8, uint1
 		}
 		break;
 #endif
+	case 'u':
+	case 'U': /* Unix timestamp */
+		if (('W' == buffer_pu8[0]) || ('w' == buffer_pu8[0]))
+		{
+			HandleWriteTime(&buffer_pu8[2]);
+		}
+		if (('R' == buffer_pu8[0]) || ('r' == buffer_pu8[0]))
+		{
+			HandleReadTime(&serverIp);
+		}
+		break;
 	default:
 		break;
 	}
@@ -337,6 +351,37 @@ static void HandleReadAdc(IPAddress * srvIp, uint8_t chId_u8)
 }
 #endif
 
+static void HandleReadTime(IPAddress * srvIp)
+{
+	uint8_t responseData_au8[2u + 4u];
+	uint32_t time_current;
+    struct timeval now;
+
+    gettimeofday(&now, NULL);
+    time_current = now.tv_sec;
+	responseData_au8[0u] = 'D'; /* Data */
+	responseData_au8[1u] = 'U'; /* Unix timestamp */
+	responseData_au8[2u] = time_current & 0xFFu ; /* LSB */
+	responseData_au8[3u] = ((time_current & 0xFF00u) >> 8u) ; 
+	responseData_au8[4u] = ((time_current & 0xFF0000u) >> 16u) ; 
+	responseData_au8[5u] = ((time_current & 0xFF000000u) >> 24u) ; /* MSB */
+	ShCom_SendResponse(srvIp,responseData_au8,sizeof(responseData_au8));
+}
+
+static void HandleWriteTime(uint32_t * newTimePtr)
+{
+	/*struct tm tm;
+    tm.tm_year = 2017 - 1900;
+    tm.tm_mon = 11;
+    tm.tm_mday = 8;
+    tm.tm_hour = 19;
+    tm.tm_min = 51;
+    tm.tm_sec = 10;*/
+    time_t t = *((time_t *)newTimePtr);//mktime(&tm);
+    //printf("Setting time: %s", asctime(&tm));
+    struct timeval now = { .tv_sec = t };
+	settimeofday(&now,NULL);
+}
 
 static void HandleReadCfg(IPAddress * srvIp, uint8_t chId_u8)
 {

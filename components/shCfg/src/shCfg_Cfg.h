@@ -60,11 +60,11 @@ const shCfgEntry_tst shCfg_ConfigTable_cast[SHCFG_CONFIGSIZE] =
 		},
 		{
 				.chId_cu8 = SHCFG_NTPSRV_CH, // "NTP server"
-				.size_cu8 = 30u // "xxxx"
+				.size_cu8 = 30u // "3.hu.pool.ntp.org             "
 		},
 		{
 				.chId_cu8 = SHCFG_NTPTZ_CH, // "NTP timezone"
-				.size_cu8 = 30u // "CET-1CEST,M3.5.0,M10.5.0/3"
+				.size_cu8 = 30u // "CET-1CEST,M3.5.0,M10.5.0/3    "
 		},
 		{
 				.chId_cu8 = SHCFG_DETIP_CH, // "Det IP address"

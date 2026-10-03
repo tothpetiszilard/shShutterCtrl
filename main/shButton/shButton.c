@@ -202,7 +202,7 @@ void ShButton_Cyclic(void)
 		}
 	}
 	#ifndef ARDUINO
-	vTaskDelay(25u / portTICK_PERIOD_MS);
+	vTaskDelay(50u / portTICK_PERIOD_MS);
 	}
 	#endif
 }

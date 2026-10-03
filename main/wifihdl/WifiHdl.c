@@ -9,6 +9,7 @@
 #include "WifiHdl_Cfg.h"
 #include <string.h>
 
+#include "esp_wifi_types.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
@@ -117,6 +118,9 @@ void wifi_init_sta(void)
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
     ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config) );
+    wifi_country_t country = {.cc="US", .schan=1, .nchan=11, .policy = WIFI_COUNTRY_POLICY_MANUAL};
+    esp_wifi_set_country(&country);
+    esp_wifi_set_max_tx_power(80);
     ESP_ERROR_CHECK(esp_wifi_start() );
 
     ESP_LOGI(TAG, "wifi_init_sta finished.");

@@ -39,7 +39,7 @@ StdReturnType ShCfg_Init(void)
 			devID[0] = (uint8_t)('A');
 			devID[1] = (uint8_t)('W');
 			devID[2] = (uint8_t)(0);
-			devID[3] = (uint8_t)(30);
+			devID[3] = (uint8_t)(34);
 			ShCfg_Write(SHCFG_IDENTDATA_CH, devID);
 			uint8_t ssid[] = "TheCityOfLight_24\0";
 			uint8_t pwd[] = "mexikomabeka\0";
